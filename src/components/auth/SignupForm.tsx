@@ -59,7 +59,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSignup, onSwitchToLogi
     });
 
     try {
-      const response = await fetch('http://192.168.1.4:8080/hotel/super-admin/super-admin-register', {
+      const response = await fetch('http://192.168.1.7:8080/hotel/super-admin/super-admin-register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

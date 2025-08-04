@@ -4,6 +4,7 @@ import { SignupForm } from './components/auth/SignupForm';
 import { Sidebar } from './components/dashboard/Sidebar';
 import { DashboardOverview } from './components/dashboard/DashboardOverview';
 import { PendingApprovals } from './components/dashboard/PendingApprovals';
+import { ApprovedAdmins } from './components/dashboard/ApprovedAdmins';
 import { UserList } from './components/dashboard/UserList';
 import { UserModal } from './components/dashboard/UserModal';
 import { CarouselManager } from './components/dashboard/CarouselManager';
@@ -91,12 +92,11 @@ function App() {
       case 'pending':
         return (
           <PendingApprovals
-            users={users.pendingUsers}
-            onApprove={handleApprove}
-            onReject={handleReject}
             onViewDetails={handleViewDetails}
           />
         );
+      case 'approved-admins':
+        return <ApprovedAdmins />;
       case 'approved':
         return (
           <UserList

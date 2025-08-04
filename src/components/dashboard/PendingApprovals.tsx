@@ -16,7 +16,7 @@ interface PendingApprovalsProps {
   onViewDetails: (user: User) => void;
 }
 
-const BASE_URL = 'http://192.168.1.4:8080';
+const BASE_URL = 'http://192.168.1.7:8080';
 
 export const PendingApprovals: React.FC<PendingApprovalsProps> = ({
   onViewDetails
@@ -340,13 +340,13 @@ export const PendingApprovals: React.FC<PendingApprovalsProps> = ({
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                    <button
+                    {/* <button
                       onClick={() => onViewDetails(user)}
                       className="inline-flex items-center px-3 py-2 border border-transparent text-sm rounded-lg text-blue-600 bg-blue-100 hover:bg-blue-200 transition-colors duration-200"
                     >
                       <Eye className="h-4 w-4 mr-1" />
                       View
-                    </button>
+                    </button> */}
                     <button
                       onClick={() => handleApprove(user.adminId)}
                       className="inline-flex items-center px-3 py-2 border border-transparent text-sm rounded-lg text-green-600 bg-green-100 hover:bg-green-200 transition-colors duration-200"
