@@ -24,7 +24,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup 
     });
 
     try {
-      const response = await fetch('http://192.168.1.4:8080/hotel/super-admin/super-admin-login', {
+      const response = await fetch('http://192.168.1.7:8080/hotel/super-admin/super-admin-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
