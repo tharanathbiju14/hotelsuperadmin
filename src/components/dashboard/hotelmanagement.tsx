@@ -15,8 +15,7 @@ import {
   Clock,
   Calendar,
 } from "lucide-react";
-import { Hotel, Amenity } from "../App";
-import HotelEditModal from "./HotelEditModal";
+import { Hotel, Amenity } from "../../App";
 import HotelImageEditModal from "./HotelImageEditModal";
 
 interface HotelManagementProps {
@@ -100,7 +99,6 @@ const HotelManagement: React.FC<HotelManagementProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("All Districts");
   const [adminOnly, setAdminOnly] = useState(false);
-  const [editingHotel, setEditingHotel] = useState<Hotel | null>(null);
   const [editingImagesForHotel, setEditingImagesForHotel] =
     useState<Hotel | null>(null);
   const [openImage, setOpenImage] = useState<string | null>(null);
@@ -217,24 +215,7 @@ const HotelManagement: React.FC<HotelManagementProps> = ({
     );
   });
 
-  const handleEdit = async (hotel: Hotel) => setEditingHotel(hotel);
-
   const handleEditImages = (hotel: Hotel) => setEditingImagesForHotel(hotel);
-
-  const handleSaveEdit = async (updatedHotel: Partial<Hotel>) => {
-    if (editingHotel) {
-      const hotelWithUpdate = { ...updatedHotel, updatedAt: new Date() };
-      setHotels((prev) =>
-        prev.map((hotel) =>
-          hotel.id === editingHotel.id
-            ? { ...hotel, ...hotelWithUpdate }
-            : hotel
-        )
-      );
-      onHotelUpdate(editingHotel.id, hotelWithUpdate);
-      setEditingHotel(null);
-    }
-  };
 
   const getAmenityNames = (amenitiesArr: (string | { name: string })[]) =>
     (amenitiesArr || [])
@@ -531,14 +512,7 @@ const HotelManagement: React.FC<HotelManagementProps> = ({
                       className="flex-1 flex items-center justify-center space-x-2 bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-2 rounded-lg transition-colors"
                     >
                       <ImageIcon className="w-4 h-4" />
-                      <span className="text-sm font-medium">Images</span>
-                    </button>
-                    <button
-                      onClick={() => handleEdit(hotel)}
-                      className="flex-1 flex items-center justify-center space-x-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-3 py-2 rounded-lg transition-colors"
-                    >
-                      <Edit className="w-4 h-4" />
-                      <span className="text-sm font-medium">Details</span>
+                      <span className="text-sm font-medium">Edit Images</span>
                     </button>
                   </div>
                 </div>
@@ -560,15 +534,6 @@ const HotelManagement: React.FC<HotelManagementProps> = ({
               : "No hotels have been registered yet"}
           </p>
         </div>
-      )}
-
-      {editingHotel && (
-        <HotelEditModal
-          hotel={editingHotel}
-          onSave={handleSaveEdit}
-          onClose={() => setEditingHotel(null)}
-          authToken={authToken}
-        />
       )}
 
       {editingImagesForHotel && (

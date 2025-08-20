@@ -8,6 +8,8 @@ import { ApprovedAdmins } from './components/dashboard/ApprovedAdmins';
 import { UserList } from './components/dashboard/UserList';
 import { UserModal } from './components/dashboard/UserModal';
 import { CarouselManager } from './components/dashboard/CarouselManager';
+import HotelManagement from './components/dashboard/hotelmanagement';
+import { Hotel, Amenity } from './App';
 
 // Mock data for demonstration
 const mockData = {
@@ -32,6 +34,8 @@ function App() {
   const [users, setUsers] = useState(mockData);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [amenities, setAmenities] = useState<Amenity[]>([]);
+  const [hotels, setHotels] = useState<Hotel[]>([]);
 
   const handleLogin = (email: string, password: string) => {
     // Simple validation - in real app, this would be API call
@@ -97,6 +101,13 @@ function App() {
         );
       case 'approved-admins':
         return <ApprovedAdmins />;
+      case 'hotel-management':
+        return <HotelManagement
+          amenities={amenities}
+          onHotelUpdate={(id, updatedHotel) => {
+            setHotels(hotels.map(h => h.id === id ? { ...h, ...updatedHotel } : h));
+          } }
+          onBack={() => setActiveSection('overview')} />;
       case 'approved':
         return (
           <UserList
