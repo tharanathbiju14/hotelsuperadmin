@@ -16,7 +16,7 @@ interface PendingApprovalsProps {
   onViewDetails: (user: User) => void;
 }
 
-const BASE_URL = 'http://192.168.1.7:8080';
+const BASE_URL = 'http://192.168.1.14:8080';
 
 export const PendingApprovals: React.FC<PendingApprovalsProps> = ({
   onViewDetails
