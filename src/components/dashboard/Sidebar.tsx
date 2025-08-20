@@ -8,7 +8,8 @@ import {
   LogOut,
   Shield,
   Image,
-  UserCheck
+  UserCheck,
+  Building2
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -22,6 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange
     { id: 'overview', label: 'Dashboard Overview', icon: LayoutDashboard },
     { id: 'pending', label: 'Pending Approvals', icon: Clock },
     { id: 'approved-admins', label: 'Approved Admins', icon: UserCheck },
+    { id: 'hotel-management', label: 'Hotel Management', icon: Building2 },
     // { id: 'approved', label: 'Approved admins', icon: CheckCircle },
     // { id: 'all-users', label: 'All admins', icon: Users },
     { id: 'carousel', label: 'Update Carousel', icon: Image },

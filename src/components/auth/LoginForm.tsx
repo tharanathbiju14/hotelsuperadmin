@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, Shield } from 'lucide-react';
 
 interface LoginFormProps {
-  onLogin: (phone: string, password: string) => void;
+  onLogin: (email: string, password: string) => void;
   onSwitchToSignup: () => void;
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup }) => {
-  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,16 +19,16 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup 
     setError(null);
 
     console.log('[Login] Sending login request:', {
-      superAdminPhoneNumber: phone,
+      superAdminEmail: email,
       superAdminPassword: password,
     });
 
     try {
-      const response = await fetch('http://192.168.1.7:8080/hotel/super-admin/super-admin-login', {
+      const response = await fetch('http://192.168.1.14:8080/hotel/super-admin/super-admin-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          superAdminPhoneNumber: phone,
+          superAdminEmail: email,
           superAdminPassword: password,
         }),
       });
@@ -47,14 +47,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup 
       } else {
         console.log('[Login] Login successful:', result);
         setError(null);
-        // Store token in sessionStorage
         if (typeof result === 'object' && result.token) {
           sessionStorage.setItem('token', result.token);
           sessionStorage.setItem('role', result.role);
           sessionStorage.setItem('email', result.email);
-          console.log('[Login] Token, role, and email stored in sessionStorage');
         }
-        onLogin(phone, password);
+        onLogin(email, password);
       }
     } catch (err) {
       console.error('[Login] Network error:', err);
@@ -78,22 +76,21 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup 
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                Email Address
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Mail className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                  id="phone"
-                  type="tel"
+                  id="email"
+                  type="email"
                   required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  placeholder="7736506644"
-                  maxLength={10}
+                  placeholder="example@email.com"
                 />
               </div>
             </div>
@@ -129,23 +126,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup 
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                  Remember me
-                </label>
-              </div>
-              <button type="button" className="text-sm text-blue-600 hover:text-blue-500">
-                Forgot password?
-              </button>
-            </div>
-
             {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 
             <button
@@ -163,18 +143,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onSwitchToSignup 
               )}
             </button>
           </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <button
-                onClick={onSwitchToSignup}
-                className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"
-              >
-                Sign up
-              </button>
-            </p>
-          </div>
         </div>
       </div>
     </div>

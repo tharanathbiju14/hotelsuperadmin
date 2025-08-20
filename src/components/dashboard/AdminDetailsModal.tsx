@@ -26,7 +26,7 @@ interface AdminDetailsModalProps {
   onClose: () => void;
 }
 
-const BASE_URL = 'http://192.168.1.7:8080';
+const BASE_URL = 'http://192.168.1.14:8080';
 
 export const AdminDetailsModal: React.FC<AdminDetailsModalProps> = ({ admin, isOpen, onClose }) => {
   const [hotels, setHotels] = useState<Hotel[]>([]);

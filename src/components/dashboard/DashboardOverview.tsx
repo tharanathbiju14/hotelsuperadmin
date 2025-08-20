@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { UserCheck, UserX, Clock as UserClock, TrendingUp, Building2, Star } from 'lucide-react';
 
 interface DashboardOverviewProps {
@@ -10,13 +10,76 @@ interface DashboardOverviewProps {
 }
 
 export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ stats }) => {
-  const StatCard = ({ title, value, icon: Icon, color, bgColor, trend }: any) => (
+  const [totalHotels, setTotalHotels] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch total hotel count from backend
+  useEffect(() => {
+    const fetchTotalHotels = async () => {
+      console.log('🚀 Starting to fetch total hotel count...');
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch('http://192.168.1.14:8080/hotel/total-hotel-count');
+        
+        console.log('📡 API Response status:', response.status);
+        console.log('📡 API Response headers:', Object.fromEntries(response.headers.entries()));
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ Successfully fetched total hotel count:', data);
+
+        // Handle different possible response structures
+        let count = 0;
+        if (typeof data === 'number') {
+          count = data;
+        } else if (data && typeof data.count === 'number') {
+          count = data.count;
+        } else if (data && typeof data.total === 'number') {
+          count = data.total;
+        } else if (data && typeof data.totalCount === 'number') {
+          count = data.totalCount;
+        } else {
+          console.warn('⚠️ Unexpected response structure:', data);
+          count = 0;
+        }
+
+        console.log('🏨 Setting total hotels count to:', count);
+        setTotalHotels(count);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+        console.error('❌ Error fetching total hotel count:', errorMessage);
+        console.error('❌ Full error object:', err);
+        setError(errorMessage);
+        setTotalHotels(0); // Fallback to 0 on error
+      } finally {
+        setLoading(false);
+        console.log('🏁 Finished fetching total hotel count');
+      }
+    };
+
+    fetchTotalHotels();
+  }, []); // Empty dependency array means this runs once on component mount
+
+  const StatCard = ({ title, value, icon: Icon, color, bgColor, trend, isLoading }: any) => (
     <div className={`${bgColor} rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105`}>
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-          <p className="text-3xl font-bold text-gray-900">{value}</p>
-          {trend && (
+          {isLoading ? (
+            <div className="flex items-center">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+              <span className="ml-2 text-sm text-gray-500">Loading...</span>
+            </div>
+          ) : (
+            <p className="text-3xl font-bold text-gray-900">{value}</p>
+          )}
+          {trend && !isLoading && (
             <div className="flex items-center mt-2">
               <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
               <span className="text-sm text-green-600">{trend}</span>
@@ -41,11 +104,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ stats }) =
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <StatCard
             title="Total Hotels"
-            value={stats.approved + stats.pending}
+            value={error ? 'Error' : totalHotels}
             icon={Building2}
             color="bg-blue-500"
             bgColor="bg-blue-50"
-            trend="All registered hotels"
+            trend={error ? `Error: ${error}` : "All registered hotels"}
+            isLoading={loading}
           />
           <StatCard
             title="Approved Users"
@@ -54,6 +118,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ stats }) =
             color="bg-green-500"
             bgColor="bg-green-50"
             trend="+8% this month"
+            isLoading={false}
           />
           <StatCard
             title="Pending Users"
@@ -62,6 +127,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ stats }) =
             color="bg-yellow-500"
             bgColor="bg-yellow-50"
             trend="Awaiting review"
+            isLoading={false}
           />
         </div>
       </div>

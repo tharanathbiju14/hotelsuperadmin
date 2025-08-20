@@ -14,7 +14,7 @@ interface ApprovedAdminsProps {
   // We'll handle the modal internally now
 }
 
-const BASE_URL = 'http://192.168.1.7:8080';
+const BASE_URL = 'http://192.168.1.14:8080';
 
 export const ApprovedAdmins: React.FC<ApprovedAdminsProps> = () => {
   const [admins, setAdmins] = useState<ApprovedAdmin[]>([]);
